@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2196f3" />
+
+  <title>NearKill - number guessing game</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+  <link rel="manifest" href="/img/site.webmanifest">
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+
+    #bot {
+      background-color: #2196f3;
+    }
+  </style>
+
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="qmark" viewBox="0 0 24 24">
+      <path
+        d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
+    </symbol>
+    <symbol id="github" viewBox="0 0 24 24">
+      <path
+        d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
+    </symbol>
+  </svg>
+  <div id="app" v-cloak>
+    <div class="navbar">
+      <a @click="addMessage('help');" href="#">
+        <svg class="qmark icon">
+          <use xlink:href="#qmark"></use>
+        </svg>
+      </a>
+      <div class="spacer"></div>
+      <div class="brand" style="font-size: larger;" @dblclick="reload">NearKill</div>
+      <div class="spacer"></div>
+      <a href="https://github.com/coluck/near-kill">
+        <svg class="github icon">
+          <use xlink:href="#github"></use>
+        </svg>
+      </a>
+    </div>
+    <nav class="sidenav left" tabindex="3" style="border-right: 1px solid #eaeaea;">
+      <div class="smartphone-menu-trigger"></div>
+
+      <div class="sidebox">
+        <ul>
+          <li>
+            Nick: <b style="color: #2196f3;">{{ nick }}</b>
+          </li>
+          <br>
+          <button @click="changeNick()" class="button is-info" style="margin-left: 15px;padding: 0 20px;">Change
+            Nick</button>
+          <br>
+          <br>
+          <p style="margin-left: 15px;"><b>{{ numUser }} </b> Online Users</p>
+          <br>
+          <p style="margin-left: 15px;">by <a href="https://github.com/coluck"
+              style="color: #2196f3; text-decoration: none; font-style: italic;"><b>@coluck</b></a></p>
+        </ul>
+        <hr>
+        <ul>
+          <h4 style="margin-left: 20px;">Leaders</h4>
+          <ul class="menu-lists" id="messages-lists">
+            <li v-for="(result, index) in leaderBoard" style="padding: .5em;">
+              {{ index+1 }}. {{ result[0]}} → {{ result[1] }}
+            </li>
+          </ul>
+        </ul>
+      </div>
+    </nav>
+
+    <nav class="sidenav right" tabindex="4" style="border-left: 1px solid #eaeaea;">
+      <div class="smartphone-menu-trigger"></div>
+      <div class="sidebox">
+        <ul>
+          <h4 style="margin-left: 20px;">Guesses</h4>
+          <ul class="menu-lists" id="messages-lists">
+            <li v-for="(nk, num) in guesses" style="padding: .6em;">
+              {{ num }} → n:{{ nk[0] }} k:{{ nk[1] }}
+            </li>
+          </ul>
+        </ul>
+      </div>
+    </nav>
+
+    <div v-if="!connected" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        
+        <div style="color: #fff; text-align: center;">
+          Disconnected please <a href="#" @click="reload" style="color: #fff;">refresh </a>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="!nick" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input v-on:keyup.13="setNick" v-model.trim="nickInp" type="text" placeholder="Enter your nick"
+              maxlength="10" class="input">
+          </div>
+          <div class="control">
+            <button v-on:click="setNick" class="button is-info">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mesbox">
+      <div class="menu">
+        <ul id="messages-list" class="menu-list" style="padding: 0px;">
+          <li v-for="message in messages">
+            <div :id="message.nick" class="media" style="padding: 0.7rem;">
+              <div class="media-left has-text-weight-bold has-text-right" style="min-width: 10%;">
+                {{ message.nick}}:
+              </div>
+              <div class="media-content">
+                {{ message.text }}
+              </div>
+              <div class="media-right">
+                <span class="is-size-7 has-text-weight-light">
+                  {{ message.time }}
+                </span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="inpbox">
+      <div>
+        <p v-if="typingStatus.length !== 0" class="help is-success" style="margin-bottom: 2px; padding-left: 5px;">
+          <b>{{ typingStatus.toString() }}</b> {{ typingStatus.length == 1 ? "is": "are" }} typing...
+        </p>
+      </div>
+      <div id="mesinp">
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input v-model.trim="message" v-on:keyup.13="sendMessage" v-on:input="updateTyping" class="input" id="inp"
+              type="text" placeholder="Send a number" maxlength=100>
+          </div>
+          <div class="control">
+            <button v-on:click="sendMessage" class="button is-info">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+  <script src="https://unpkg.com/vue-toasted"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+  <script src="/listeners.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171120008-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-171120008-1');
+  </script>
+</body>
+
+</html>
