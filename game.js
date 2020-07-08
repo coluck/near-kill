@@ -94,12 +94,12 @@ var gameObj = {
     var numlen = this.num.length;
     if (!this.started)
       return `The game has not begun. To start the game write 'go<3-9>' @${nick}`;
-    if (guess[0] === 0)
-      return `number cannot start with 0 @${nick}`;
+    if (gs[0] === '0')
+      return `The number cannot start with zero @${nick}`;
     if (guess.length !== numlen)
       return `${numlen} digits number please @${nick}`;
     if (hasDup(guess))
-      return `Number cannot have duplicate digits @${nick}`;
+      return `The number cannot have duplicate digits @${nick}`;
 
     this.guesses[guess] = this.guesses[guess] || makeGuess(this.num, gs);
     var result = this.guesses[guess];
