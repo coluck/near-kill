@@ -18,8 +18,8 @@ app.get('/old', (req, res) => {
 
 
 let numUsers = 0;
-let cheatEnabled = false;
-let cheatCode = "cheatcode";
+let cheatEnabled = true;
+let cheatCode = process.env.Code;
 
 io.on('connection', (socket) => {
     let added = false;
