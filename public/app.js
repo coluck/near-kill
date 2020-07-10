@@ -88,6 +88,7 @@ var app = new Vue({
             var data = {text: this.message, nick: this.nick, time: fancyDate()}
             this.addMessage(data);
             this.message = '';
+            this.$refs.mesinp.focus();
             //console.log(this.data)
             socket.emit('new mes tos', data);
         },

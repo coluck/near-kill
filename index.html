@@ -150,7 +150,7 @@
       <div id="mesinp">
         <div class="field has-addons">
           <div class="control is-expanded">
-            <input v-model.trim="message" v-on:keyup.13="sendMessage" v-on:input="updateTyping" class="input" id="inp"
+            <input ref="mesinp" v-model.trim="message" v-on:keyup.13="sendMessage" v-on:input="updateTyping" class="input" id="inp"
               type="text" placeholder="Send a number" maxlength=100>
           </div>
           <div class="control">
