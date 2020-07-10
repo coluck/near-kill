@@ -140,8 +140,8 @@ function createNum(n = 4, noStart0 = true, diff = true) {
   if (diff) {
     let array = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     shuffleArray(array);
-    if (noStart0 && array[0] === '0')
-      createNum(n, noStart0);
+    while (noStart0 && array[0] === '0')
+      shuffleArray();
     return array.slice(0, n);
   }
   else {
